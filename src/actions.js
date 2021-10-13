@@ -12,3 +12,17 @@ export const css = (node, props) => {
 		},
 	};
 }
+
+export const clickOutside = (node, cb) => {
+
+	const handleOutsideClick = ({ target }) => {
+		if (!node.contains(target)) cb();
+	};
+	window.addEventListener('click', handleOutsideClick);
+	return {
+		destroy() {
+			window.removeEventListener('click', handleOutsideClick);
+		}
+	};
+
+}

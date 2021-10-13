@@ -12,7 +12,7 @@
 	<input type="number" class="slider" bind:value {min} {max} {step} />
 </div>
 
-<style>
+<style lang="scss">
 	div {
 		margin-bottom: 0.5rem;
 	}
