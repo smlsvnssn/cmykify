@@ -11,12 +11,26 @@
 
 <div>
 	<legend>{title}</legend>
-	<input type="range" class="slider" bind:value {min} {max} {step} />
+	<input type="range" class="slider {title}" bind:value {min} {max} {step} />
 	<input type="number" class="slider" bind:value {min} {max} {step} />
 </div>
 
 <style lang="scss">
 	div {
 		margin-bottom: 0.5rem;
+	}
+	input[type='range'] {
+		&.C::-webkit-slider-thumb {
+			background: #00aeef;
+		}
+		&.M::-webkit-slider-thumb {
+			background: #ec008c;
+		}
+		&.Y::-webkit-slider-thumb {
+			background: #fff200;
+		}
+		&.K::-webkit-slider-thumb {
+			background: #231f20;
+		}
 	}
 </style>

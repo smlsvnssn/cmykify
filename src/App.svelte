@@ -1,4 +1,5 @@
 <script>
+	import 'style.scss';
 	import CMYKificator from './CMYKificator.svelte';
 
 	//localStorage.clear();
@@ -12,3 +13,7 @@
 
 <CMYKificator bind:settings={settingsA} />
 <CMYKificator bind:settings={settingsB} />
+
+<style lang="scss" global>
+	@import './style.scss';
+</style>

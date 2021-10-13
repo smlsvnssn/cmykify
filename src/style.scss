@@ -1,21 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@500&family=Inconsolata&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@500&family=Inconsolata&display=swap");
 
 :root {
 	--font: DM Sans;
-	--topToXheightRatio: .345;
-	--lineheightMinusXheightRatio: .505;
-	--leftShiftRatio: .07;
-	--letterSpacingRatio: -.04em;
-	
+	--topToXheightRatio: 0.345;
+	--lineheightMinusXheightRatio: 0.505;
+	--leftShiftRatio: 0.07;
+	--letterSpacingRatio: -0.04em;
+
 	--debug: 1px;
 	--padding: 0;
 	--mainPadding: 2rem;
-	
+
 	--bg: #eee;
- 	--clr: #333;
-	--bgAlpha: #808080;
+	--clr: #333;
+	--bgAlpha: #eee;
 	--bgAlphaLight: #80808022;
-  	--clrAlpha: #80808080;
+	--clrAlpha: #80808080;
 	--clrAlphaLight: #80808022;
 	--multiply: multiply;
 	--screen: screen;
@@ -36,39 +36,31 @@ html {
 	background: var(--bg);
 
 	font: 16px/1em $basefont;
-	
-	transition: all .9s;
+
+	transition: all 0.9s;
 }
 
 *,
 *:before,
 *:after {
 	box-sizing: inherit;
-	padding-top:0.1px;
+	padding-top: 0.1px;
 }
 
 body {
-	margin: 4rem;
-	@media #{$bp} {
-		margin: 2rem;
-	}
+	width: 100%;
+	height: 100%;
+	margin: 0;
 	@media #{$bpup} {
 		display: flex;
-		width: calc(100% - 8rem);
-		gap: 4rem;
 		align-items: flex-start;
-		section {
-			padding-top: 8rem;
-			width: 100%;
-		}
 	}
 	hyphens: auto;
-	padding-bottom: 12rem;
 	color: var(--clr);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	display: flow-root;
-	transition: all .6s;
+	display: flex;
+	transition: all 0.6s;
 }
 
 .debug {
@@ -78,137 +70,16 @@ body {
 	outline-offset: -1px;
 }
 
-h1 {
-	--fontSize: 24rem;
-	--lineHeight: 1;
-	
-	// Ugly css hack in order to use dynamic vars
-	font: var(--fontSize)/var(--lineHeight) var(--font);
-	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	padding-bottom: calc(var(--mainPadding) * var(--padding));
-}
-
-h2 {
-	--fontSize: 12rem;
-	--lineHeight: 1;
-	font: var(--fontSize)/var(--lineHeight) var(--font);
-	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	padding-bottom: calc(var(--mainPadding) * var(--padding));
-}
-
-h3 {
-	--fontSize: 6rem;
-	--lineHeight: 1;
-	font: var(--fontSize)/var(--lineHeight) var(--font);
-	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	padding-bottom: calc(var(--mainPadding) * var(--padding));
-
-}
-
-h4 {
-	--fontSize: 3rem;
-	--lineHeight: 1;
-	font: var(--fontSize)/var(--lineHeight) var(--font);
-	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	padding-bottom: calc(var(--mainPadding) * var(--padding));
-
-}
-
-h5 {
-	--fontSize: 1.5rem;
-	--lineHeight: 1;
-	font: var(--fontSize)/var(--lineHeight) var(--font);
-	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	padding-bottom: calc(var(--mainPadding) * var(--padding));
-
-}
-
-.caption {
-	--fontSize: .6rem;
-	--lineHeight: 1.5;
-	font: var(--fontSize)/var(--lineHeight) var(--font);
-	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	display: block;
-	
-	text-transform: uppercase;
-	letter-spacing: .1em;
-	font-weight: bold;
-	padding-bottom: var(--mainPadding);
-}
-
 p {
 	--fontSize: 1rem;
 	--lineHeight: 1.5;
-	font: var(--fontSize)/var(--lineHeight) var(--font);
+	font: var(--fontSize) / var(--lineHeight) var(--font);
 	letter-spacing: calc(0em + var(--letterSpacingRatio));
-	transform:
-		translatey( calc(0em - var(--fontSize) * (((var(--lineHeight) - 1)/2) + var(--topToXheightRatio))))			
-		translatex( calc(0em - var(--fontSize) * var(--leftShiftRatio))); 
-	margin-bottom: calc(0em - var(--fontSize) * ((var(--lineHeight) - 1) + var(--lineheightMinusXheightRatio)));
-	outline: none;
-	
-	//letter-spacing: 0;
-	padding-bottom: calc(var(--mainPadding) * var(--padding));
-}
-
-.boxwrapper {
-	display: flex;
-	gap: 4rem;
-	flex-wrap: wrap;
-	
-	padding-top: 4rem;
-	.box {
-		flex: 1 1 25%;
-		padding: 1rem 0 0;
-		h4 {
-			padding-bottom: var(--mainPadding);
-		}
-		p {
-			hyphens: auto;
-			padding-top: 0;
-			padding-bottom: var(--mainPadding);
-
-			&:last-child {
-				padding-bottom: 0;
-			}
-
-		}
-	}
 }
 
 @mixin sans {
-  font-family: "DM Sans", sans-serif;
-	letter-spacing: -.015em;
+	font-family: "DM Sans", sans-serif;
+	letter-spacing: -0.015em;
 }
 .settings {
 	--active: var(--bg);
@@ -217,64 +88,25 @@ p {
 	--border: var(--bgAlphaLight);
 	--border-hover: var(--bgAlpha);
 	--background: var(--clr);
-	--disabled: #F6F8FF;
-	--disabled-inner: #E1E6F9;
-			
+	--disabled: #f6f8ff;
+	--disabled-inner: #e1e6f9;
+
 	@include sans;
-	
-	transition: all .6s; 
-	
-	font-size: 1rem;
+
+	transition: all 0.6s;
+
+	font-size: 0.9rem;
 	line-height: 1.5rem;
 	color: var(--bg);
 	background: var(--clr);
 	margin-bottom: 6rem;
-	flex: 30rem;
-	
+
 	form {
-		max-width: 75rem;
+		max-width: 15rem;
 		//margin: auto;
 		padding: 2rem;
-	}
-	legend {
-		color: var(--bgAlpha);
-	}
-	
-	#switchar {
-		margin-top: rem;
-	}
-	
-	details {
-		padding: 2rem;
-		summary {
-			padding-bottom: 0;
-			cursor: pointer;
-		}
-		article {
-			padding-top: 2rem;
-			h5 {
-				padding-bottom: 2rem;
-			}
-			p {
-				padding-bottom: 2rem;
-			}
-			a {
-				color: var(--bgAlpha);
-			}
-		}
-	}
-	
-	#fontSpecs {
-		font-family: "Inconsolata", monospace;
-		hyphens: none;
-		outline: none;
-		padding: 0 2rem 2rem;
-		tab-size: 1;
-	}
-	
-	.fieldset {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
 		column-gap: 2rem;
 		> div {
 			margin-bottom: 0rem;
@@ -282,26 +114,43 @@ p {
 			flex-wrap: wrap;
 			align-items: center;
 			//justify-content: space-between;
-			
+
 			legend {
 				flex: 100%;
-				padding-top: .5rem;
+				padding-top: 0.7rem;
+				padding-bottom: 0.2rem;
+			}
+			&:first-child legend {
+				padding-top: 0;
 			}
 		}
 	}
-	
+	legend {
+		color: var(--bg);
+	}
+
+	#switchar {
+		margin-top: rem;
+	}
+	#fontSpecs {
+		font-family: "Inconsolata", monospace;
+		hyphens: none;
+		outline: none;
+		padding: 0 2rem 2rem;
+		tab-size: 1;
+	}
+
 	#switchar {
 		margin-top: 1rem;
 		div {
-			padding-bottom: .5rem;
+			padding-bottom: 0.5rem;
 		}
 		label {
 			padding-left: 1rem;
 		}
 	}
-	
-	
-	@supports(-webkit-appearance: none) or (-moz-appearance: none) {
+
+	@supports (-webkit-appearance: none) or (-moz-appearance: none) {
 		input {
 			@include sans;
 
@@ -314,33 +163,31 @@ p {
 			border: rgba(0, 0, 0, 0.05);
 			background: var(--clrBgLight);
 			transition: box-shadow 0.3s ease-out;
-			
 		}
-		
+
 		input[type="text"] {
 			background: none;
 			flex: 100%;
 			width: 100%;
-			font-size: 1rem;
+			font-size: inherit;
 			border-bottom: 3px solid var(--bgAlphaLight);
 			border-radius: 0;
 			padding: 0.5rem 0;
-			margin-bottom: .5rem;
+			margin-bottom: 0.5rem;
 		}
 
 		input[type="number"] {
-			flex: 0 0 4rem;
+			flex: 0 0 3rem;
 			//background: red;
-			font-size: 1rem;	
+			font-size: inherit;
 			text-align: right;
-
 		}
 		input::-webkit-outer-spin-button,
 		input::-webkit-inner-spin-button {
 			-webkit-appearance: none;
 			margin: 0;
 		}
-		input[type=number] {
+		input[type="number"] {
 			-moz-appearance: textfield;
 		}
 
@@ -349,7 +196,7 @@ p {
 			flex: auto;
 			height: 3px;
 			cursor: pointer;
-			background:  var(--bgAlphaLight);
+			background: var(--bgAlphaLight);
 			padding: 0;
 			margin: 1em 0 0.8em;
 
@@ -368,9 +215,9 @@ p {
 				}
 			}
 		}
-		
-		input[type='checkbox'],
-		input[type='radio'] {
+
+		input[type="checkbox"],
+		input[type="radio"] {
 			-webkit-appearance: none;
 			-moz-appearance: none;
 			height: 25px;
@@ -382,26 +229,26 @@ p {
 			cursor: pointer;
 			border: 3px solid var(--bgAlphaLight);
 			background: var(--b, var(--background));
-			transition: background .3s, border-color .3s, box-shadow .2s;
+			transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
 			&:after {
-				content: '';
+				content: "";
 				display: block;
 				left: 0;
 				top: 0;
 				position: absolute;
-				transition: transform var(--d-t, .3s) var(--d-t-e, ease), opacity var(--d-o, .2s);
+				transition: transform var(--d-t, 0.3s) var(--d-t-e, ease), opacity var(--d-o, 0.2s);
 			}
 			&:checked {
 				--b: var(--active);
 				--bc: var(--active);
-				--d-o: .3s;
-				--d-t: .6s;
-				--d-t-e: cubic-bezier(.2, .85, .32, 1.2);
+				--d-o: 0.3s;
+				--d-t: 0.6s;
+				--d-t-e: cubic-bezier(0.2, 0.85, 0.32, 1.2);
 			}
 			&:disabled {
 				--b: var(--disabled);
 				cursor: not-allowed;
-				opacity: .9;
+				opacity: 0.9;
 				&:checked {
 					--b: var(--disabled-inner);
 					--bc: var(--border);
@@ -428,7 +275,7 @@ p {
 				}
 			}
 		}
-		input[type='checkbox'] {
+		input[type="checkbox"] {
 			&:not(.switch) {
 				border-radius: 7px;
 				&:after {
@@ -468,13 +315,13 @@ p {
 				&:disabled {
 					&:not(:checked) {
 						&:after {
-							opacity: .6;
+							opacity: 0.6;
 						}
 					}
 				}
 			}
 		}
-		input[type='radio'] {
+		input[type="radio"] {
 			border-radius: 50%;
 			&:after {
 				width: 19px;
@@ -482,10 +329,10 @@ p {
 				border-radius: 50%;
 				background: var(--active-inner);
 				opacity: 0;
-				transform: scale(var(--s, .7));
+				transform: scale(var(--s, 0.7));
 			}
 			&:checked {
-				--s: .5;
+				--s: 0.5;
 			}
 		}
 	}
@@ -495,18 +342,17 @@ p {
 	.visually-hidden {
 		display: none;
 	}
-	
+
 	mark {
 		color: var(--bg);
 		background: var(--bgAlphaLight);
 	}
-	
+
 	[aria-selected="true"] {
 		background: var(--bgAlphaLight);
 	}
 }
 
 [contenteditable]:focus {
-    outline: none;
-	
+	outline: none;
 }

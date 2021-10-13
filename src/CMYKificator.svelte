@@ -6,8 +6,7 @@
 
 	export let settings = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 };
 
-	let grain = `"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.6 .6 .6  0 0 .6 .6 .6  0 0 .6 .6 .6 0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"`,
-		props,
+	let props,
 		active = false;
 
 	$: props = {
@@ -15,14 +14,14 @@
 			url(../cmyk/c${settings.c}.png),
 			url(../cmyk/m${settings.m}.png),
 			url(../cmyk/y${settings.y}.png),
-			url(../cmyk/k${settings.k}.png),
-			url(${grain})`,
-		'background-size': `${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, 512px`,
+			url(../cmyk/k${settings.k}.png)`,
+		'background-size': `${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px`,
 		filter: `saturate(${settings.saturation})`,
 	};
 </script>
 
-<div class="cmyk" use:css={props}>
+<div class="cmykificator">
+	<div class="cmyk" use:css={props} />
 	<div class="cmykIt" use:clickOutside={() => (active = false)}>
 		<div class="header" on:click={() => (active = !active)} on:mouseenter={() => (active = true)}>
 			<span class="c">C</span><span class="m">M</span><span class="y">Y</span>Kificator®
@@ -49,19 +48,32 @@
 		background-size: #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, 512px;
 		filter: saturate($saturation);
 	}
-	.cmyk {
-		background-repeat: repeat;
-		background-blend-mode: multiply, multiply, multiply, multiply, normal;
-		height: 100vh;
-		width: 100vw;
-		transition: none;
+	.cmykificator {
+		--grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.6 .6 .6  0 0 .6 .6 .6  0 0 .6 .6 .6 0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+
+		background: var(--grain) repeat;
+		background-size: 512px;
+		position: relative;
+		height: 100%;
+		width: 100%;
+
+		.cmyk {
+			background-repeat: repeat;
+			background-blend-mode: multiply, multiply, multiply, multiply;
+			height: 100%;
+			width: 100%;
+			transition: none;
+			mix-blend-mode: multiply;
+		}
 		.cmykIt {
+			position: absolute;
+			top: 0;
 			display: inline-block;
 			color: #fff;
 
 			.header {
 				display: inline-block;
-				font-size: 0.8rem;
+				font-size: 0.9rem;
 				padding: 1.5rem;
 				background: #000c;
 				cursor: pointer;
@@ -78,7 +90,7 @@
 			}
 			.settings {
 				width: 100%;
-				opacity: 0.9;
+				opacity: 0.95;
 				margin-bottom: 0;
 				form {
 					padding: 1.5rem;
