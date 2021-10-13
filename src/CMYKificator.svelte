@@ -11,10 +11,10 @@
 
 	$: props = {
 		'background-image': `
-			url(../cmyk/c${settings.c}.png),
-			url(../cmyk/m${settings.m}.png),
-			url(../cmyk/y${settings.y}.png),
-			url(../cmyk/k${settings.k}.png)`,
+			url(/cmyk/c${settings.c}.png),
+			url(/cmyk/m${settings.m}.png),
+			url(/cmyk/y${settings.y}.png),
+			url(/cmyk/k${settings.k}.png)`,
 		'background-size': `${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px`,
 		filter: `saturate(${settings.saturation})`,
 	};
