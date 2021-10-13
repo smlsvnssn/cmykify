@@ -379,6 +379,7 @@ p {
     flex: 0 0 4rem;
     font-size: 1rem;
     text-align: right;
+    width: 3rem;
   }
   .settings input::-webkit-outer-spin-button,
   .settings input::-webkit-inner-spin-button {

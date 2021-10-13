@@ -4,9 +4,9 @@
 	import { slide } from 'svelte/transition';
 	import { times } from 'ouml';
 
-	export let settings = { c: 20, m: 40, y: 100, k: 10, raster: 128, saturation: 1 };
+	export let settings = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 };
 
-	let grain = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.6 .6 .6  0  0 .6 .6 .6  0 0 .6 .6 .6  0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+	let grain = `"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.6 .6 .6  0 0 .6 .6 .6  0 0 .6 .6 .6 0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"`,
 		props,
 		active = false;
 
@@ -16,9 +16,8 @@
 			url(../cmyk/m${settings.m}.png),
 			url(../cmyk/y${settings.y}.png),
 			url(../cmyk/k${settings.k}.png),
-			${grain}			
-		`,
-		'background-size': `${settings.raster}px, ${settings.raster}px, ${settings.raster}px, ${settings.raster}px, 512px`,
+			url(${grain})`,
+		'background-size': `${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, 512px`,
 		filter: `saturate(${settings.saturation})`,
 	};
 </script>
@@ -35,20 +34,22 @@
 					<Slider title="M" min="0" max="100" bind:value={settings.m} step="10" />
 					<Slider title="Y" min="0" max="100" bind:value={settings.y} step="10" />
 					<Slider title="K" min="0" max="100" bind:value={settings.k} step="10" />
-					<Slider title="Raster" min="32" max="512" bind:value={settings.raster} step="1" />
+					<Slider title="Dot size" min="1" max="10" bind:value={settings.raster} step=".1" />
 					<Slider title="Saturation" min="0" max="2" bind:value={settings.saturation} step=".01" />
 				</form>
 			</div>
 		{/if}
-		<!-- 		<h2 use:css={props}>CMYK</h2>
- -->
 	</div>
 </div>
 
 <style lang="scss">
+	@mixin cmykify($c: 20, $m: 40, $y: 100, $k: 10, $raster: 3, $saturation: 1) {
+		$grain: "data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.6 .6 .6  0 0 .6 .6 .6  0 0 .6 .6 .6 0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E";
+		background-image: url(../cmyk/c#{$c}.png), url(../cmyk/m#{$m}.png), url(../cmyk/y#{$y}.png), url(../cmyk/k#{$k}.png), url($grain);
+		background-size: #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, 512px;
+		filter: saturate($saturation);
+	}
 	.cmyk {
-		/* background: url(../cmyk/c50.png) repeat 128px; */
-		// background-size: 256px;
 		background-repeat: repeat;
 		background-blend-mode: multiply, multiply, multiply, multiply, normal;
 		height: 100vh;
@@ -75,19 +76,13 @@
 					color: #fff200;
 				}
 			}
-			/* 	h2 {
-				margin-top: 6rem;
-				background-repeat: repeat;
-				background-blend-mode: multiply, multiply, multiply, multiply, normal;
-				-webkit-text-fill-color: transparent;
-				-webkit-background-clip: text;
-			} */
 			.settings {
 				width: 100%;
 				opacity: 0.9;
 				margin-bottom: 0;
 				form {
 					padding: 1.5rem;
+					//@include cmykify();
 				}
 			}
 		}

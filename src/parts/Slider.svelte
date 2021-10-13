@@ -4,6 +4,9 @@
 	export let min = 0;
 	export let max = 1;
 	export let step = 1;
+
+	// sanitize
+	$: value = Math.max(min, Math.min(value, max)) /*- (value % step)*/;
 </script>
 
 <div>
