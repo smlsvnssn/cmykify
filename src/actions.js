@@ -26,3 +26,21 @@ export const clickOutside = (node, cb) => {
 	};
 
 }
+
+export const clickOutsideSpecifiedElements = (node, args = { nodelist: [], cb: () => null }) => {
+
+	const handleOutsideClick = ({ target }) => {
+		let isOutside = true;
+		args.nodelist.forEach(e => {
+			if (e.contains(target)) isOutside = false;
+		});
+		if (isOutside) args.cb();
+	};
+	window.addEventListener('click', handleOutsideClick);
+	return {
+		destroy() {
+			window.removeEventListener('click', handleOutsideClick);
+		}
+	};
+
+}

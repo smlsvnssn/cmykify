@@ -1,13 +1,25 @@
 <script>
 	import Slider from './parts/Slider.svelte';
-	import { css, clickOutside } from './actions';
+	import { css, clickOutsideSpecifiedElements } from './actions';
 	import { slide } from 'svelte/transition';
+	import { tick } from 'svelte';
 	import { times } from 'ouml';
 
 	export let settings = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 };
 
 	let props,
-		active = false;
+		active = false,
+		settingsEl,
+		cmykoutEl,
+		outsideListener;
+
+	$: if (settingsEl && cmykoutEl) {
+		outsideListener?.destroy();
+		outsideListener = clickOutsideSpecifiedElements(null, {
+			nodelist: [settingsEl, cmykoutEl],
+			cb: () => (active = false),
+		});
+	}
 
 	$: props = {
 		'background-image': `
@@ -18,16 +30,27 @@
 		'background-size': `${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px, ${settings.raster * 45}px`,
 		filter: `saturate(${settings.saturation})`,
 	};
+
+	$: mixin = `@mixin cmykify($c: 20, $m: 40, $y: 100, $k: 10, $raster: 3, $saturation: 1) {
+	$base: "https://cmykify.vercel.app";
+	background-image: url(#{$base}/cmyk/c#{$c}.png), url(#{$base}/cmyk/m#{$m}.png), url(#{$base}/cmyk/y#{$y}.png), url(#{$base}/cmyk/k#{$k}.png),
+		url(#{$base}/cmyk/grain.png);
+	background-size: #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, 512px;
+	filter: saturate($saturation);
+}
+
+.cmykified { @include cmykify(${settings.c}, ${settings.m} ,${settings.y}, ${settings.k}, ${settings.raster}, ${settings.saturation}) }`;
 </script>
 
 <div class="cmykificator">
 	<div class="cmyk" use:css={props} />
-	<div class="cmykIt" use:clickOutside={() => (active = false)}>
+	<div class="cmykIt">
 		<div class="header" on:click={() => (active = !active)} on:mouseenter={() => (active = true)}>
 			<span class="c">C</span><span class="m">M</span><span class="y">Y</span>Kificator®
 		</div>
+		<br />
 		{#if active}
-			<div class="settings" transition:slide>
+			<div class="settings" bind:this={settingsEl} transition:slide>
 				<form>
 					<Slider title="C" min="0" max="100" bind:value={settings.c} step="10" />
 					<Slider title="M" min="0" max="100" bind:value={settings.m} step="10" />
@@ -37,21 +60,16 @@
 					<Slider title="Saturation" min="0" max="2" bind:value={settings.saturation} step=".01" />
 				</form>
 			</div>
+			<div class="cmykOut" bind:this={cmykoutEl} contenteditable="true" spellcheck="false" transition:slide>
+				<pre>{mixin}</pre>
+			</div>
 		{/if}
 	</div>
 </div>
 
 <style lang="scss">
-	@mixin cmykify($c: 20, $m: 40, $y: 100, $k: 10, $raster: 3, $saturation: 1) {
-		$grain: "data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.6 .7 .7  0 0 .7 .7 .7  0 0 .7 .7 .7 0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E";
-		background-image: url(../cmyk/c#{$c}.png), url(../cmyk/m#{$m}.png), url(../cmyk/y#{$y}.png), url(../cmyk/k#{$k}.png), url($grain);
-		background-size: #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, 512px;
-		filter: saturate($saturation);
-	}
+	@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap');
 	.cmykificator {
-		/* --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values=' .7 .7 .7  0 0 .7 .7 .7  0 0 .7 .7 .7 0 0 0 0 0 1 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); */
-
-		//background: linear-gradient(#9f987911, #9f987911), var(--grain) repeat;
 		background: url(/cmyk/grain.png) repeat;
 		background-size: 256px;
 		position: relative;
@@ -66,10 +84,25 @@
 			transition: none;
 			mix-blend-mode: multiply;
 		}
+		.cmykOut {
+			position: absolute;
+			bottom: 0;
+			color: #fff;
+			font-family: 'JetBrains Mono' monospace;
+			font-size: 0.7rem;
+			padding: 0.8rem 1.5rem;
+			background: #000c;
+			overflow: auto;
+			width: 100%;
+			hyphens: none;
+			outline: none;
+			tab-size: 4;
+		}
 		.cmykIt {
 			position: absolute;
 			top: 0;
-			display: inline-block;
+			height: 100%;
+			width: 100%;
 			color: #fff;
 
 			.header {
@@ -88,9 +121,12 @@
 				.y {
 					color: #fff200;
 				}
+				.k {
+					color: #231f20;
+				}
 			}
 			.settings {
-				width: 100%;
+				display: inline-block;
 				opacity: 0.95;
 				margin-bottom: 0;
 				form {
