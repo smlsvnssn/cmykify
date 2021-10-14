@@ -23,7 +23,7 @@
 		<p>CMYK for the modern web. Finally!</p>
 		<p>
 			Simply use the provided <span class="cmykificator"
-				><span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ificators®</span
+				><span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ificator®</span
 			> to adjust the colour to your specific needs, and copy/paste the resulting mixin into your scss. It's that easy!
 		</p>
 		<small>Brought to you by <a href="https://lhli.net">LHLI Corporation™®© Limited</a>. No rights reserved.</small>

@@ -39,7 +39,7 @@
 <div class="cmykificator">
 	<div class="cmyk" use:css={props} />
 	<div class="cmykIt">
-		<div class="header" bind:this={headerEl} on:click={() => (active = !active)} on:mouseenter={!$isSmallScreen ? (active = true) : 0}>
+		<div class="header" bind:this={headerEl} on:click={() => (active = !active)} on:mouseenter={() => (!$isSmallScreen ? (active = true) : 0)}>
 			<span class="c">C</span><span class="m">M</span><span class="y">Y</span>Kificator®
 		</div>
 		<br />
@@ -54,14 +54,7 @@
 					<Slider title="Saturation" min="0" max="2" bind:value={settings.saturation} step=".01" />
 				</form>
 			</div>
-			<div
-				class="cmykOut"
-				class:isSmallScreen={$isSmallScreen}
-				bind:this={cmykoutEl}
-				contenteditable="true"
-				spellcheck="false"
-				transition:slide={{ delay: 100 }}
-			>
+			<div class="cmykOut" bind:this={cmykoutEl} transition:slide={{ delay: 100 }}>
 				<Mixin {settings} />
 			</div>
 		{/if}
@@ -93,15 +86,10 @@
 			background: #000c;
 			overflow: auto;
 			width: 100%;
-			hyphens: none;
-			outline: none;
+			transition: background 0.3s;
 
-			&.isSmallScreen {
-				transform: translateY(10rem);
-				transition: transform 0.3s;
-				&:hover {
-					transform: translateY(0);
-				}
+			&:active {
+				background: #ec008c;
 			}
 		}
 		.cmykIt {

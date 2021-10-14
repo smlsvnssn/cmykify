@@ -44,3 +44,13 @@ export const clickOutsideSpecifiedElements = (node, args = { nodelist: [], cb: (
 	};
 
 }
+
+export const copyText = node => {
+	const range = document.createRange(),
+		selection = window.getSelection();
+
+	range.selectNodeContents(node);
+	selection.removeAllRanges();
+	selection.addRange(range);
+	navigator.clipboard.writeText(node.innerHTML);
+}
