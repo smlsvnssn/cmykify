@@ -2,11 +2,13 @@
 	import CMYKify from './CMYKify.svelte';
 	import CMYKificator from './CMYKificator.svelte';
 	import Info from './parts/Info.svelte';
+	import { isSmallScreen } from './stores';
 	import { log, times } from 'ouml';
 
 	//localStorage.clear();
 	let settingsA = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 },
-		settingsB = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 };
+		settingsB = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 },
+		innerWidth;
 
 	if (localStorage.getItem('CMYKprops')) [settingsA, settingsB] = JSON.parse(localStorage.getItem('CMYKprops'));
 
@@ -25,11 +27,17 @@
 
 	const preloaded = preloadImages();
 
+	$: $isSmallScreen = innerWidth < 600;
+
 	$: localStorage.setItem('CMYKprops', JSON.stringify([settingsA, settingsB]));
 </script>
 
+<svelte:window bind:innerWidth />
+
 <CMYKificator bind:settings={settingsA} />
-<CMYKificator bind:settings={settingsB} />
+{#if !$isSmallScreen}
+	<CMYKificator bind:settings={settingsB} />
+{/if}
 
 <CMYKify />
 

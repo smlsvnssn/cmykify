@@ -40,6 +40,7 @@
 		@include cmyko();
 		max-width: 25rem;
 		box-shadow: 0 5px 30px #231f2033;
+		z-index: 100;
 		h1 {
 			font-size: 3rem;
 			line-height: 3rem;

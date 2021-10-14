@@ -4,7 +4,7 @@
 	import Slider from './parts/Slider.svelte';
 	import { css, clickOutsideSpecifiedElements } from './actions';
 	import { slide } from 'svelte/transition';
-	import { introVisible } from './stores';
+	import { introVisible, isSmallScreen } from './stores';
 
 	export let settings = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 };
 
@@ -39,7 +39,7 @@
 <div class="cmykificator">
 	<div class="cmyk" use:css={props} />
 	<div class="cmykIt">
-		<div class="header" bind:this={headerEl} on:click={() => (active = !active)} on:mouseenter={() => (active = true)}>
+		<div class="header" bind:this={headerEl} on:click={() => (active = !active)} on:mouseenter={!$isSmallScreen ? (active = true) : 0}>
 			<span class="c">C</span><span class="m">M</span><span class="y">Y</span>Kificator®
 		</div>
 		<br />
@@ -54,7 +54,14 @@
 					<Slider title="Saturation" min="0" max="2" bind:value={settings.saturation} step=".01" />
 				</form>
 			</div>
-			<div class="cmykOut" bind:this={cmykoutEl} contenteditable="true" spellcheck="false" transition:slide={{ delay: 100 }}>
+			<div
+				class="cmykOut"
+				class:isSmallScreen={$isSmallScreen}
+				bind:this={cmykoutEl}
+				contenteditable="true"
+				spellcheck="false"
+				transition:slide={{ delay: 100 }}
+			>
 				<Mixin {settings} />
 			</div>
 		{/if}
@@ -75,7 +82,6 @@
 			background-blend-mode: multiply, multiply, multiply, multiply;
 			height: 100%;
 			width: 100%;
-			transition: none;
 			mix-blend-mode: multiply;
 		}
 		.cmykOut {
@@ -89,6 +95,14 @@
 			width: 100%;
 			hyphens: none;
 			outline: none;
+
+			&.isSmallScreen {
+				transform: translateY(10rem);
+				transition: transform 0.3s;
+				&:hover {
+					transform: translateY(0);
+				}
+			}
 		}
 		.cmykIt {
 			position: absolute;

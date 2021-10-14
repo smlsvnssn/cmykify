@@ -152,6 +152,9 @@ var app = (function () {
     function set_input_value(input, value) {
         input.value = value == null ? '' : value;
     }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
+    }
     function custom_event(type, detail, bubbles = false) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, bubbles, false, detail);
@@ -905,6 +908,7 @@ var app = (function () {
     }
 
     const introVisible = writable(false);
+    const isSmallScreen = writable(false);
 
     function backIn(t) {
         const s = 1.70158;
@@ -963,7 +967,7 @@ var app = (function () {
     const file$5 = "src/CMYKify.svelte";
 
     // (15:0) {#if $introVisible}
-    function create_if_block$1(ctx) {
+    function create_if_block$2(ctx) {
     	let div;
     	let h1;
     	let span0;
@@ -1031,34 +1035,34 @@ var app = (function () {
     			a = element("a");
     			a.textContent = "LHLI Corporation™®© Limited";
     			t18 = text(". No rights reserved.");
-    			attr_dev(span0, "class", "c svelte-1ylaalw");
+    			attr_dev(span0, "class", "c svelte-daq8zv");
     			add_location(span0, file$5, 21, 6, 590);
-    			attr_dev(span1, "class", "m svelte-1ylaalw");
+    			attr_dev(span1, "class", "m svelte-daq8zv");
     			add_location(span1, file$5, 21, 30, 614);
-    			attr_dev(span2, "class", "y svelte-1ylaalw");
+    			attr_dev(span2, "class", "y svelte-daq8zv");
     			add_location(span2, file$5, 21, 54, 638);
-    			attr_dev(span3, "class", "k svelte-1ylaalw");
+    			attr_dev(span3, "class", "k svelte-daq8zv");
     			add_location(span3, file$5, 21, 78, 662);
-    			attr_dev(h1, "class", "svelte-1ylaalw");
+    			attr_dev(h1, "class", "svelte-daq8zv");
     			add_location(h1, file$5, 21, 2, 586);
     			add_location(p0, file$5, 22, 2, 698);
-    			attr_dev(span4, "class", "c svelte-1ylaalw");
+    			attr_dev(span4, "class", "c svelte-daq8zv");
     			add_location(span4, file$5, 25, 5, 804);
-    			attr_dev(span5, "class", "m svelte-1ylaalw");
+    			attr_dev(span5, "class", "m svelte-daq8zv");
     			add_location(span5, file$5, 25, 29, 828);
-    			attr_dev(span6, "class", "y svelte-1ylaalw");
+    			attr_dev(span6, "class", "y svelte-daq8zv");
     			add_location(span6, file$5, 25, 53, 852);
-    			attr_dev(span7, "class", "k svelte-1ylaalw");
+    			attr_dev(span7, "class", "k svelte-daq8zv");
     			add_location(span7, file$5, 25, 77, 876);
-    			attr_dev(span8, "class", "cmykificator svelte-1ylaalw");
+    			attr_dev(span8, "class", "cmykificator svelte-daq8zv");
     			add_location(span8, file$5, 24, 27, 772);
     			add_location(p1, file$5, 23, 2, 741);
     			attr_dev(a, "href", "https://lhli.net");
-    			attr_dev(a, "class", "svelte-1ylaalw");
+    			attr_dev(a, "class", "svelte-daq8zv");
     			add_location(a, file$5, 28, 27, 1068);
-    			attr_dev(small, "class", "svelte-1ylaalw");
+    			attr_dev(small, "class", "svelte-daq8zv");
     			add_location(small, file$5, 28, 2, 1043);
-    			attr_dev(div, "class", "cmykify svelte-1ylaalw");
+    			attr_dev(div, "class", "cmykify svelte-daq8zv");
     			add_location(div, file$5, 15, 1, 362);
     		},
     		m: function mount(target, anchor) {
@@ -1138,7 +1142,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
+    		id: create_if_block$2.name,
     		type: "if",
     		source: "(15:0) {#if $introVisible}",
     		ctx
@@ -1150,7 +1154,7 @@ var app = (function () {
     function create_fragment$5(ctx) {
     	let if_block_anchor;
     	let current;
-    	let if_block = /*$introVisible*/ ctx[0] && create_if_block$1(ctx);
+    	let if_block = /*$introVisible*/ ctx[0] && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -1174,7 +1178,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$1(ctx);
+    					if_block = create_if_block$2(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -1631,7 +1635,7 @@ var app = (function () {
     const file$2 = "src/CMYKificator.svelte";
 
     // (46:2) {#if active}
-    function create_if_block(ctx) {
+    function create_if_block$1(ctx) {
     	let div0;
     	let form;
     	let slider0;
@@ -1789,14 +1793,15 @@ var app = (function () {
     			t5 = space();
     			div1 = element("div");
     			create_component(mixin.$$.fragment);
-    			attr_dev(form, "class", "svelte-mvzqji");
-    			add_location(form, file$2, 47, 4, 1429);
-    			attr_dev(div0, "class", "settings svelte-mvzqji");
-    			add_location(div0, file$2, 46, 3, 1362);
-    			attr_dev(div1, "class", "cmykOut svelte-mvzqji");
+    			attr_dev(form, "class", "svelte-g9a3up");
+    			add_location(form, file$2, 47, 4, 1460);
+    			attr_dev(div0, "class", "settings svelte-g9a3up");
+    			add_location(div0, file$2, 46, 3, 1393);
+    			attr_dev(div1, "class", "cmykOut svelte-g9a3up");
     			attr_dev(div1, "contenteditable", "true");
     			attr_dev(div1, "spellcheck", "false");
-    			add_location(div1, file$2, 56, 3, 1957);
+    			toggle_class(div1, "isSmallScreen", /*$isSmallScreen*/ ctx[6]);
+    			add_location(div1, file$2, 56, 3, 1988);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -1877,6 +1882,10 @@ var app = (function () {
     			const mixin_changes = {};
     			if (dirty & /*settings*/ 1) mixin_changes.settings = /*settings*/ ctx[0];
     			mixin.$set(mixin_changes);
+
+    			if (dirty & /*$isSmallScreen*/ 64) {
+    				toggle_class(div1, "isSmallScreen", /*$isSmallScreen*/ ctx[6]);
+    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -1935,7 +1944,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block$1.name,
     		type: "if",
     		source: "(46:2) {#if active}",
     		ctx
@@ -1961,7 +1970,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*active*/ ctx[1] && create_if_block(ctx);
+    	let if_block = /*active*/ ctx[1] && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -1981,21 +1990,21 @@ var app = (function () {
     			br = element("br");
     			t6 = space();
     			if (if_block) if_block.c();
-    			attr_dev(div0, "class", "cmyk svelte-mvzqji");
-    			add_location(div0, file$2, 39, 1, 1063);
-    			attr_dev(span0, "class", "c svelte-mvzqji");
-    			add_location(span0, file$2, 42, 3, 1243);
-    			attr_dev(span1, "class", "m svelte-mvzqji");
-    			add_location(span1, file$2, 42, 27, 1267);
-    			attr_dev(span2, "class", "y svelte-mvzqji");
-    			add_location(span2, file$2, 42, 51, 1291);
-    			attr_dev(div1, "class", "header svelte-mvzqji");
-    			add_location(div1, file$2, 41, 2, 1124);
-    			add_location(br, file$2, 44, 2, 1337);
-    			attr_dev(div2, "class", "cmykIt svelte-mvzqji");
-    			add_location(div2, file$2, 40, 1, 1101);
-    			attr_dev(div3, "class", "cmykificator svelte-mvzqji");
-    			add_location(div3, file$2, 38, 0, 1035);
+    			attr_dev(div0, "class", "cmyk svelte-g9a3up");
+    			add_location(div0, file$2, 39, 1, 1078);
+    			attr_dev(span0, "class", "c svelte-g9a3up");
+    			add_location(span0, file$2, 42, 3, 1274);
+    			attr_dev(span1, "class", "m svelte-g9a3up");
+    			add_location(span1, file$2, 42, 27, 1298);
+    			attr_dev(span2, "class", "y svelte-g9a3up");
+    			add_location(span2, file$2, 42, 51, 1322);
+    			attr_dev(div1, "class", "header svelte-g9a3up");
+    			add_location(div1, file$2, 41, 2, 1139);
+    			add_location(br, file$2, 44, 2, 1368);
+    			attr_dev(div2, "class", "cmykIt svelte-g9a3up");
+    			add_location(div2, file$2, 40, 1, 1116);
+    			attr_dev(div3, "class", "cmykificator svelte-g9a3up");
+    			add_location(div3, file$2, 38, 0, 1050);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2010,7 +2019,7 @@ var app = (function () {
     			append_dev(div1, span1);
     			append_dev(div1, span2);
     			append_dev(div1, t4);
-    			/*div1_binding*/ ctx[7](div1);
+    			/*div1_binding*/ ctx[8](div1);
     			append_dev(div2, t5);
     			append_dev(div2, br);
     			append_dev(div2, t6);
@@ -2020,14 +2029,28 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					action_destroyer(css_action = css.call(null, div0, /*props*/ ctx[5])),
-    					listen_dev(div1, "click", /*click_handler*/ ctx[8], false, false, false),
-    					listen_dev(div1, "mouseenter", /*mouseenter_handler*/ ctx[9], false, false, false)
+    					listen_dev(div1, "click", /*click_handler*/ ctx[9], false, false, false),
+    					listen_dev(
+    						div1,
+    						"mouseenter",
+    						function () {
+    							if (is_function(!/*$isSmallScreen*/ ctx[6]
+    							? /*active*/ ctx[1] = true
+    							: 0)) (!/*$isSmallScreen*/ ctx[6]
+    							? /*active*/ ctx[1] = true
+    							: 0).apply(this, arguments);
+    						},
+    						false,
+    						false,
+    						false
+    					)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(new_ctx, [dirty]) {
+    			ctx = new_ctx;
     			if (css_action && is_function(css_action.update) && dirty & /*props*/ 32) css_action.update.call(null, /*props*/ ctx[5]);
 
     			if (/*active*/ ctx[1]) {
@@ -2038,7 +2061,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block(ctx);
+    					if_block = create_if_block$1(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div2, null);
@@ -2064,7 +2087,7 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div3);
-    			/*div1_binding*/ ctx[7](null);
+    			/*div1_binding*/ ctx[8](null);
     			if (if_block) if_block.d();
     			mounted = false;
     			run_all(dispose);
@@ -2084,8 +2107,11 @@ var app = (function () {
 
     function instance$2($$self, $$props, $$invalidate) {
     	let $introVisible;
+    	let $isSmallScreen;
     	validate_store(introVisible, 'introVisible');
     	component_subscribe($$self, introVisible, $$value => $$invalidate(18, $introVisible = $$value));
+    	validate_store(isSmallScreen, 'isSmallScreen');
+    	component_subscribe($$self, isSmallScreen, $$value => $$invalidate(6, $isSmallScreen = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('CMYKificator', slots, []);
 
@@ -2113,7 +2139,6 @@ var app = (function () {
     	}
 
     	const click_handler = () => $$invalidate(1, active = !active);
-    	const mouseenter_handler = () => $$invalidate(1, active = true);
 
     	function slider0_value_binding(value) {
     		if ($$self.$$.not_equal(settings.c, value)) {
@@ -2182,6 +2207,7 @@ var app = (function () {
     		clickOutsideSpecifiedElements,
     		slide,
     		introVisible,
+    		isSmallScreen,
     		settings,
     		props,
     		active,
@@ -2189,7 +2215,8 @@ var app = (function () {
     		cmykoutEl,
     		headerEl,
     		outsideListener,
-    		$introVisible
+    		$introVisible,
+    		$isSmallScreen
     	});
 
     	$$self.$inject_state = $$props => {
@@ -2199,7 +2226,7 @@ var app = (function () {
     		if ('settingsEl' in $$props) $$invalidate(2, settingsEl = $$props.settingsEl);
     		if ('cmykoutEl' in $$props) $$invalidate(3, cmykoutEl = $$props.cmykoutEl);
     		if ('headerEl' in $$props) $$invalidate(4, headerEl = $$props.headerEl);
-    		if ('outsideListener' in $$props) $$invalidate(6, outsideListener = $$props.outsideListener);
+    		if ('outsideListener' in $$props) $$invalidate(7, outsideListener = $$props.outsideListener);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -2207,11 +2234,11 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*settingsEl, cmykoutEl, outsideListener, headerEl*/ 92) {
+    		if ($$self.$$.dirty & /*settingsEl, cmykoutEl, outsideListener, headerEl*/ 156) {
     			if (settingsEl && cmykoutEl) {
     				outsideListener?.destroy();
 
-    				$$invalidate(6, outsideListener = clickOutsideSpecifiedElements(null, {
+    				$$invalidate(7, outsideListener = clickOutsideSpecifiedElements(null, {
     					nodelist: [settingsEl, cmykoutEl, headerEl],
     					cb: () => $$invalidate(1, active = false)
     				}));
@@ -2242,10 +2269,10 @@ var app = (function () {
     		cmykoutEl,
     		headerEl,
     		props,
+    		$isSmallScreen,
     		outsideListener,
     		div1_binding,
     		click_handler,
-    		mouseenter_handler,
     		slider0_value_binding,
     		slider1_value_binding,
     		slider2_value_binding,
@@ -2385,12 +2412,77 @@ var app = (function () {
     /* src/App.svelte generated by Svelte v3.43.0 */
     const file = "src/App.svelte";
 
+    // (38:0) {#if !$isSmallScreen}
+    function create_if_block(ctx) {
+    	let cmykificator;
+    	let updating_settings;
+    	let current;
+
+    	function cmykificator_settings_binding_1(value) {
+    		/*cmykificator_settings_binding_1*/ ctx[6](value);
+    	}
+
+    	let cmykificator_props = {};
+
+    	if (/*settingsB*/ ctx[1] !== void 0) {
+    		cmykificator_props.settings = /*settingsB*/ ctx[1];
+    	}
+
+    	cmykificator = new CMYKificator({
+    			props: cmykificator_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(cmykificator, 'settings', cmykificator_settings_binding_1));
+
+    	const block = {
+    		c: function create() {
+    			create_component(cmykificator.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(cmykificator, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const cmykificator_changes = {};
+
+    			if (!updating_settings && dirty & /*settingsB*/ 2) {
+    				updating_settings = true;
+    				cmykificator_changes.settings = /*settingsB*/ ctx[1];
+    				add_flush_callback(() => updating_settings = false);
+    			}
+
+    			cmykificator.$set(cmykificator_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(cmykificator.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(cmykificator.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(cmykificator, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(38:0) {#if !$isSmallScreen}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment(ctx) {
-    	let cmykificator0;
+    	let cmykificator;
     	let updating_settings;
     	let t0;
-    	let cmykificator1;
-    	let updating_settings_1;
     	let t1;
     	let cmykify;
     	let t2;
@@ -2400,48 +2492,35 @@ var app = (function () {
     	let link1;
     	let link2;
     	let current;
+    	let mounted;
+    	let dispose;
+    	add_render_callback(/*onwindowresize*/ ctx[4]);
 
-    	function cmykificator0_settings_binding(value) {
-    		/*cmykificator0_settings_binding*/ ctx[2](value);
+    	function cmykificator_settings_binding(value) {
+    		/*cmykificator_settings_binding*/ ctx[5](value);
     	}
 
-    	let cmykificator0_props = {};
+    	let cmykificator_props = {};
 
     	if (/*settingsA*/ ctx[0] !== void 0) {
-    		cmykificator0_props.settings = /*settingsA*/ ctx[0];
+    		cmykificator_props.settings = /*settingsA*/ ctx[0];
     	}
 
-    	cmykificator0 = new CMYKificator({
-    			props: cmykificator0_props,
+    	cmykificator = new CMYKificator({
+    			props: cmykificator_props,
     			$$inline: true
     		});
 
-    	binding_callbacks.push(() => bind(cmykificator0, 'settings', cmykificator0_settings_binding));
-
-    	function cmykificator1_settings_binding(value) {
-    		/*cmykificator1_settings_binding*/ ctx[3](value);
-    	}
-
-    	let cmykificator1_props = {};
-
-    	if (/*settingsB*/ ctx[1] !== void 0) {
-    		cmykificator1_props.settings = /*settingsB*/ ctx[1];
-    	}
-
-    	cmykificator1 = new CMYKificator({
-    			props: cmykificator1_props,
-    			$$inline: true
-    		});
-
-    	binding_callbacks.push(() => bind(cmykificator1, 'settings', cmykificator1_settings_binding));
+    	binding_callbacks.push(() => bind(cmykificator, 'settings', cmykificator_settings_binding));
+    	let if_block = !/*$isSmallScreen*/ ctx[3] && create_if_block(ctx);
     	cmykify = new CMYKify({ $$inline: true });
     	info = new Info({ $$inline: true });
 
     	const block = {
     		c: function create() {
-    			create_component(cmykificator0.$$.fragment);
+    			create_component(cmykificator.$$.fragment);
     			t0 = space();
-    			create_component(cmykificator1.$$.fragment);
+    			if (if_block) if_block.c();
     			t1 = space();
     			create_component(cmykify.$$.fragment);
     			t2 = space();
@@ -2452,23 +2531,23 @@ var app = (function () {
     			link2 = element("link");
     			attr_dev(link0, "rel", "preconnect");
     			attr_dev(link0, "href", "https://fonts.googleapis.com");
-    			add_location(link0, file, 38, 1, 969);
+    			add_location(link0, file, 46, 1, 1130);
     			attr_dev(link1, "rel", "preconnect");
     			attr_dev(link1, "href", "https://fonts.gstatic.com");
     			attr_dev(link1, "crossorigin", "");
-    			add_location(link1, file, 39, 1, 1032);
+    			add_location(link1, file, 47, 1, 1193);
     			attr_dev(link2, "href", "https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=JetBrains+Mono:wght@300&family=DM+Serif+Display&family=DM+Serif+Text&display=swap");
     			attr_dev(link2, "type", "text/css");
     			attr_dev(link2, "rel", "stylesheet");
-    			add_location(link2, file, 40, 1, 1104);
+    			add_location(link2, file, 48, 1, 1265);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			mount_component(cmykificator0, target, anchor);
+    			mount_component(cmykificator, target, anchor);
     			insert_dev(target, t0, anchor);
-    			mount_component(cmykificator1, target, anchor);
+    			if (if_block) if_block.m(target, anchor);
     			insert_dev(target, t1, anchor);
     			mount_component(cmykify, target, anchor);
     			insert_dev(target, t2, anchor);
@@ -2478,46 +2557,65 @@ var app = (function () {
     			append_dev(document.head, link1);
     			append_dev(document.head, link2);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(window, "resize", /*onwindowresize*/ ctx[4]);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
-    			const cmykificator0_changes = {};
+    			const cmykificator_changes = {};
 
     			if (!updating_settings && dirty & /*settingsA*/ 1) {
     				updating_settings = true;
-    				cmykificator0_changes.settings = /*settingsA*/ ctx[0];
+    				cmykificator_changes.settings = /*settingsA*/ ctx[0];
     				add_flush_callback(() => updating_settings = false);
     			}
 
-    			cmykificator0.$set(cmykificator0_changes);
-    			const cmykificator1_changes = {};
+    			cmykificator.$set(cmykificator_changes);
 
-    			if (!updating_settings_1 && dirty & /*settingsB*/ 2) {
-    				updating_settings_1 = true;
-    				cmykificator1_changes.settings = /*settingsB*/ ctx[1];
-    				add_flush_callback(() => updating_settings_1 = false);
+    			if (!/*$isSmallScreen*/ ctx[3]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*$isSmallScreen*/ 8) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(t1.parentNode, t1);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
     			}
-
-    			cmykificator1.$set(cmykificator1_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(cmykificator0.$$.fragment, local);
-    			transition_in(cmykificator1.$$.fragment, local);
+    			transition_in(cmykificator.$$.fragment, local);
+    			transition_in(if_block);
     			transition_in(cmykify.$$.fragment, local);
     			transition_in(info.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(cmykificator0.$$.fragment, local);
-    			transition_out(cmykificator1.$$.fragment, local);
+    			transition_out(cmykificator.$$.fragment, local);
+    			transition_out(if_block);
     			transition_out(cmykify.$$.fragment, local);
     			transition_out(info.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_component(cmykificator0, detaching);
+    			destroy_component(cmykificator, detaching);
     			if (detaching) detach_dev(t0);
-    			destroy_component(cmykificator1, detaching);
+    			if (if_block) if_block.d(detaching);
     			if (detaching) detach_dev(t1);
     			destroy_component(cmykify, detaching);
     			if (detaching) detach_dev(t2);
@@ -2526,6 +2624,8 @@ var app = (function () {
     			detach_dev(link0);
     			detach_dev(link1);
     			detach_dev(link2);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -2541,6 +2641,9 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
+    	let $isSmallScreen;
+    	validate_store(isSmallScreen, 'isSmallScreen');
+    	component_subscribe($$self, isSmallScreen, $$value => $$invalidate(3, $isSmallScreen = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
 
@@ -2559,7 +2662,8 @@ var app = (function () {
     			k: 10,
     			raster: 3,
     			saturation: 1
-    		};
+    		},
+    		innerWidth;
 
     	if (localStorage.getItem('CMYKprops')) [settingsA, settingsB] = JSON.parse(localStorage.getItem('CMYKprops'));
 
@@ -2582,12 +2686,16 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	function cmykificator0_settings_binding(value) {
+    	function onwindowresize() {
+    		$$invalidate(2, innerWidth = window.innerWidth);
+    	}
+
+    	function cmykificator_settings_binding(value) {
     		settingsA = value;
     		$$invalidate(0, settingsA);
     	}
 
-    	function cmykificator1_settings_binding(value) {
+    	function cmykificator_settings_binding_1(value) {
     		settingsB = value;
     		$$invalidate(1, settingsB);
     	}
@@ -2596,17 +2704,21 @@ var app = (function () {
     		CMYKify,
     		CMYKificator,
     		Info,
+    		isSmallScreen,
     		log,
     		times,
     		settingsA,
     		settingsB,
+    		innerWidth,
     		preloadImages,
-    		preloaded
+    		preloaded,
+    		$isSmallScreen
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('settingsA' in $$props) $$invalidate(0, settingsA = $$props.settingsA);
     		if ('settingsB' in $$props) $$invalidate(1, settingsB = $$props.settingsB);
+    		if ('innerWidth' in $$props) $$invalidate(2, innerWidth = $$props.innerWidth);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -2614,6 +2726,10 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*innerWidth*/ 4) {
+    			set_store_value(isSmallScreen, $isSmallScreen = innerWidth < 600, $isSmallScreen);
+    		}
+
     		if ($$self.$$.dirty & /*settingsA, settingsB*/ 3) {
     			localStorage.setItem('CMYKprops', JSON.stringify([settingsA, settingsB]));
     		}
@@ -2622,8 +2738,11 @@ var app = (function () {
     	return [
     		settingsA,
     		settingsB,
-    		cmykificator0_settings_binding,
-    		cmykificator1_settings_binding
+    		innerWidth,
+    		$isSmallScreen,
+    		onwindowresize,
+    		cmykificator_settings_binding,
+    		cmykificator_settings_binding_1
     	];
     }
 
