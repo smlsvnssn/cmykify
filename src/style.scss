@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@500,700&display=swap");
+//@import "scss-reset/_reset.scss";
 
 :root {
 	--debug: 1px;
@@ -29,7 +29,7 @@ html {
 	box-sizing: border-box;
 	background: var(--bg);
 
-	font: 16px/1.2em $basefont;
+	font: 16px/1.3em $basefont;
 
 	transition: all 0.9s;
 }
@@ -38,7 +38,6 @@ html {
 *:before,
 *:after {
 	box-sizing: inherit;
-	padding-top: 0.1px;
 }
 
 body {

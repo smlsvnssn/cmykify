@@ -1,8 +1,7 @@
 <script>
 	import CMYKify from './CMYKify.svelte';
-
-	import 'style.scss';
 	import CMYKificator from './CMYKificator.svelte';
+	import Info from './parts/Info.svelte';
 	import { log, times } from 'ouml';
 
 	//localStorage.clear();
@@ -34,6 +33,19 @@
 
 <CMYKify />
 
+<Info />
+
+<svelte:head>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=JetBrains+Mono:wght@300&family=DM+Serif+Display&family=DM+Serif+Text&display=swap"
+		type="text/css"
+		rel="stylesheet"
+	/>
+</svelte:head>
+
 <style lang="scss" global>
+	//&family=Calistoga&family=Modak
 	@use './style.scss';
 </style>

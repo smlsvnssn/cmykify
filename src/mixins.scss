@@ -21,3 +21,24 @@
 	background-size: #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, 512px;
 	filter: saturate($saturation);
 }
+
+@mixin cmyko($w: 2px, $h: 100%) {
+	overflow: hidden;
+	vertical-align: top;
+	&:after,
+	&:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: $h;
+		width: $w * 2;
+		border-left: $w solid #00aeef;
+		border-right: $w solid #ec008c;
+	}
+	&:after {
+		left: $w * 2;
+		border-left: $w solid #fff200;
+		border-right: $w solid #231f20;
+	}
+}
