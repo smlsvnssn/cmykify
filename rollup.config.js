@@ -5,7 +5,6 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 import autoPreprocess from 'svelte-preprocess';
-//import postcss from 'rollup-plugin-postcss';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -47,17 +46,13 @@ export default {
 			},
 			onwarn: (warning, handler) => {
 				const { code, frame } = warning;
+				console.log(code)
 				if (code === "css-unused-selector")
 					return;
 
 				handler(warning);
 			},
 		}),
-		// postcss({
-		// 	extract: 'public/global.css',
-		// 	sourceMap: true,
-		// 	minimize: true,
-		// }),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
