@@ -19,14 +19,20 @@
 		out:fly={{ duration: 300, y: 300, opacity: 0, easing: backIn }}
 		use:clickOutside={() => ($introVisible = false)}
 	>
-		<h1><span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ify®</h1>
+		<h1>
+			<span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ify®
+		</h1>
 		<p>CMYK for the modern web. Finally!</p>
 		<p>
 			Simply use the provided <span class="cmykificator"
 				><span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ificator®</span
 			> to adjust the colour to your specific needs, and copy/paste the resulting mixin into your scss. It's that easy!
 		</p>
-		<small>Brought to you by <a href="https://lhli.net">LHLI Corporation™®© Limited</a>. No rights reserved.</small>
+		<small>
+			If you prefer to host the files yourself, download
+			<a href="./cmyk.zip">this .zip</a> and change <code>$base</code> accordingly.<br />
+			Brought to you by <a href="https://lhli.net">LHLI Corporation™®© Limited</a>. No rights reserved.
+		</small>
 	</div>
 {/if}
 
@@ -52,6 +58,7 @@
 		}
 		small {
 			font-size: 0.5rem;
+			line-height: 1em;
 			a {
 				color: #231f20;
 			}
