@@ -1,35 +1,36 @@
 <script>
-	import CMYKify from './CMYKify.svelte';
-	import CMYKificator from './CMYKificator.svelte';
-	import Info from './parts/Info.svelte';
-	import { isSmallScreen } from './stores';
-	import { log, times } from 'ouml';
+	import CMYKify from './CMYKify.svelte'
+	import CMYKificator from './CMYKificator.svelte'
+	import Info from './parts/Info.svelte'
+	import { isSmallScreen } from './stores'
+	import { log, times } from 'ouml'
 
 	//localStorage.clear();
 	let settingsA = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 },
-		settingsB = { c: 20, m: 40, y: 100, k: 10, raster: 3, saturation: 1 },
-		innerWidth;
+		settingsB = { c: 100, m: 20, y: 20, k: 10, raster: 3, saturation: 1 },
+		innerWidth
 
-	if (localStorage.getItem('CMYKprops')) [settingsA, settingsB] = JSON.parse(localStorage.getItem('CMYKprops'));
+	if (localStorage.getItem('CMYKprops'))
+		[settingsA, settingsB] = JSON.parse(localStorage.getItem('CMYKprops'))
 
 	const preloadImages = (a = []) => {
-		['c', 'm', 'y', 'k'].forEach((channel) => {
+		;['c', 'm', 'y', 'k'].forEach(channel => {
 			a.push(
-				times(11, (value) => {
-					const i = new Image();
-					i.src = `/cmyk/${channel}${value * 10}.png`;
-					return i;
-				})
-			);
-		});
-		return a;
-	};
+				times(11, value => {
+					const i = new Image()
+					i.src = `/cmyk/${channel}${value * 10}.png`
+					return i
+				}),
+			)
+		})
+		return a
+	}
 
-	const preloaded = preloadImages();
+	const preloaded = preloadImages()
 
-	$: $isSmallScreen = innerWidth < 600;
+	$: $isSmallScreen = innerWidth < 600
 
-	$: localStorage.setItem('CMYKprops', JSON.stringify([settingsA, settingsB]));
+	$: localStorage.setItem('CMYKprops', JSON.stringify([settingsA, settingsB]))
 </script>
 
 <svelte:window bind:innerWidth />
