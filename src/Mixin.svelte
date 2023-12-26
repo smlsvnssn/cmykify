@@ -1,10 +1,10 @@
 <script>
-	import { copyText } from './actions';
-	import { isSmallScreen } from './stores';
+	import { copyText } from './actions'
+	import { isSmallScreen } from './stores'
 
-	export let settings;
+	export let settings
 
-	let codeEl;
+	let codeEl
 
 	$: mixin = `@mixin cmykify($c: 20, $m: 40, $y: 100, $k: 10, $raster: 3, $saturation: 1) {
 	$base: "https://cmykify.vercel.app";
@@ -15,16 +15,24 @@
 		url(#{$base}/cmyk/k#{$k}.png),
 		url(#{$base}/cmyk/grain.png);
 	background-size: #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, #{$raster * 45}px, 512px;
+	background-repeat: repeat;
+	background-blend-mode: multiply, multiply, multiply, multiply, multiply;
+	mix-blend-mode: multiply;
 	filter: saturate($saturation);
 }
 
-.cmykified { @include cmykify(${settings.c}, ${settings.m} ,${settings.y}, ${settings.k}, ${settings.raster}, ${settings.saturation}) }`;
+.cmykified { @include cmykify(${settings.c}, ${settings.m} ,${settings.y}, ${settings.k}, ${settings.raster}, ${settings.saturation}) }`
 </script>
 
 {#if $isSmallScreen}
 	<span on:click={() => copyText(codeEl)}>Copy mixin</span>
 {/if}
-<pre bind:this={codeEl} class:hidden={$isSmallScreen} contenteditable="true" spellcheck="false" on:click={() => copyText(codeEl)}>{mixin}</pre>
+<pre
+	bind:this={codeEl}
+	class:hidden={$isSmallScreen}
+	contenteditable="true"
+	spellcheck="false"
+	on:click={() => copyText(codeEl)}>{mixin}</pre>
 
 <style lang="scss">
 	pre {

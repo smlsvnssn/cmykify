@@ -1,37 +1,51 @@
 <script>
-	import { clickOutside } from './actions';
-	import { onMount } from 'svelte';
-	import { nextFrame } from 'ouml';
-	import { introVisible } from './stores';
-	import { fly } from 'svelte/transition';
-	import { backOut, backIn } from 'svelte/easing';
+	import { clickOutside } from './actions'
+	import { onMount } from 'svelte'
+	import { nextFrame } from 'ouml'
+	import { introVisible } from './stores'
+	import { fly } from 'svelte/transition'
+	import { backOut, backIn } from 'svelte/easing'
 
 	onMount(async () => {
-		await nextFrame();
-		$introVisible = true;
-	});
+		await nextFrame()
+		$introVisible = true
+	})
 </script>
 
 {#if $introVisible}
 	<div
 		class="cmykify"
-		in:fly={{ delay: 10, duration: 1000, y: -500, opacity: 0, easing: backOut }}
+		in:fly={{
+			delay: 10,
+			duration: 800,
+			y: -500,
+			opacity: 0,
+			easing: backOut,
+		}}
 		out:fly={{ duration: 300, y: 300, opacity: 0, easing: backIn }}
 		use:clickOutside={() => ($introVisible = false)}
 	>
 		<h1>
-			<span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ify®
+			<span class="c">C</span><span class="m">M</span><span class="y"
+				>Y</span
+			><span class="k">K</span>ify®
 		</h1>
 		<p>CMYK for the modern web. Finally!</p>
 		<p>
 			Simply use the provided <span class="cmykificator"
-				><span class="c">C</span><span class="m">M</span><span class="y">Y</span><span class="k">K</span>ificator®</span
-			> to adjust the colour to your specific needs, and copy/paste the resulting mixin into your scss. It's that easy!
+				><span class="c">C</span><span class="m">M</span><span class="y"
+					>Y</span
+				><span class="k">K</span>ificator®</span
+			> to adjust the colour to your specific needs, and copy/paste the resulting
+			mixin into your scss. It's that easy!
 		</p>
 		<small>
 			If you prefer to host the files yourself, download
-			<a href="./cmyk.zip">this .zip</a> and change <code>$base</code> accordingly.<br />
-			Brought to you by <a href="https://lhli.net">LHLI Corporation™®© Limited</a>. No rights reserved.
+			<a href="./cmyk.zip">this .zip</a> and change <code>$base</code>
+			accordingly.<br />
+			Brought to you by
+			<a href="https://lhli.net">LHLI Corporation™®© Limited</a>. No
+			rights reserved.
 		</small>
 	</div>
 {/if}

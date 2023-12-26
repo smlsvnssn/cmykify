@@ -1,5 +1,5 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 var app = (function () {
     'use strict';
 
@@ -100,7 +100,7 @@ var app = (function () {
     function append_empty_stylesheet(node) {
         const style_element = element('style');
         append_stylesheet(get_root_for_style(node), style_element);
-        return style_element;
+        return style_element.sheet;
     }
     function append_stylesheet(node, style) {
         append(node.head || node, style);
@@ -155,13 +155,15 @@ var app = (function () {
     function toggle_class(element, name, toggle) {
         element.classList[toggle ? 'add' : 'remove'](name);
     }
-    function custom_event(type, detail, bubbles = false) {
+    function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
         const e = document.createEvent('CustomEvent');
-        e.initCustomEvent(type, bubbles, false, detail);
+        e.initCustomEvent(type, bubbles, cancelable, detail);
         return e;
     }
 
-    const active_docs = new Set();
+    // we need to store the information for multiple documents because a Svelte application could also contain iframes
+    // https://github.com/sveltejs/svelte/issues/3624
+    const managed_styles = new Map();
     let active = 0;
     // https://github.com/darkskyapp/string-hash/blob/master/index.js
     function hash(str) {
@@ -170,6 +172,11 @@ var app = (function () {
         while (i--)
             hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
         return hash >>> 0;
+    }
+    function create_style_information(doc, node) {
+        const info = { stylesheet: append_empty_stylesheet(node), rules: {} };
+        managed_styles.set(doc, info);
+        return info;
     }
     function create_rule(node, a, b, duration, delay, ease, fn, uid = 0) {
         const step = 16.666 / duration;
@@ -181,11 +188,9 @@ var app = (function () {
         const rule = keyframes + `100% {${fn(b, 1 - b)}}\n}`;
         const name = `__svelte_${hash(rule)}_${uid}`;
         const doc = get_root_for_style(node);
-        active_docs.add(doc);
-        const stylesheet = doc.__svelte_stylesheet || (doc.__svelte_stylesheet = append_empty_stylesheet(node).sheet);
-        const current_rules = doc.__svelte_rules || (doc.__svelte_rules = {});
-        if (!current_rules[name]) {
-            current_rules[name] = true;
+        const { stylesheet, rules } = managed_styles.get(doc) || create_style_information(doc, node);
+        if (!rules[name]) {
+            rules[name] = true;
             stylesheet.insertRule(`@keyframes ${name} ${rule}`, stylesheet.cssRules.length);
         }
         const animation = node.style.animation || '';
@@ -211,14 +216,14 @@ var app = (function () {
         raf(() => {
             if (active)
                 return;
-            active_docs.forEach(doc => {
-                const stylesheet = doc.__svelte_stylesheet;
+            managed_styles.forEach(info => {
+                const { stylesheet } = info;
                 let i = stylesheet.cssRules.length;
                 while (i--)
                     stylesheet.deleteRule(i);
-                doc.__svelte_rules = {};
+                info.rules = {};
             });
-            active_docs.clear();
+            managed_styles.clear();
         });
     }
 
@@ -253,22 +258,40 @@ var app = (function () {
     function add_flush_callback(fn) {
         flush_callbacks.push(fn);
     }
-    let flushing = false;
+    // flush() calls callbacks in this order:
+    // 1. All beforeUpdate callbacks, in order: parents before children
+    // 2. All bind:this callbacks, in reverse order: children before parents.
+    // 3. All afterUpdate callbacks, in order: parents before children. EXCEPT
+    //    for afterUpdates called during the initial onMount, which are called in
+    //    reverse order: children before parents.
+    // Since callbacks might update component values, which could trigger another
+    // call to flush(), the following steps guard against this:
+    // 1. During beforeUpdate, any updated components will be added to the
+    //    dirty_components array and will cause a reentrant call to flush(). Because
+    //    the flush index is kept outside the function, the reentrant call will pick
+    //    up where the earlier call left off and go through all dirty components. The
+    //    current_component value is saved and restored so that the reentrant call will
+    //    not interfere with the "parent" flush() call.
+    // 2. bind:this callbacks cannot trigger new flush() calls.
+    // 3. During afterUpdate, any updated components will NOT have their afterUpdate
+    //    callback called a second time; the seen_callbacks set, outside the flush()
+    //    function, guarantees this behavior.
     const seen_callbacks = new Set();
+    let flushidx = 0; // Do *not* move this inside the flush() function
     function flush() {
-        if (flushing)
-            return;
-        flushing = true;
+        const saved_component = current_component;
         do {
             // first, call beforeUpdate functions
             // and update components
-            for (let i = 0; i < dirty_components.length; i += 1) {
-                const component = dirty_components[i];
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
                 set_current_component(component);
                 update(component.$$);
             }
             set_current_component(null);
             dirty_components.length = 0;
+            flushidx = 0;
             while (binding_callbacks.length)
                 binding_callbacks.pop()();
             // then, once components are updated, call
@@ -288,8 +311,8 @@ var app = (function () {
             flush_callbacks.pop()();
         }
         update_scheduled = false;
-        flushing = false;
         seen_callbacks.clear();
+        set_current_component(saved_component);
     }
     function update($$) {
         if ($$.fragment !== null) {
@@ -350,6 +373,9 @@ var app = (function () {
                 }
             });
             block.o(local);
+        }
+        else if (callback) {
+            callback();
         }
     }
     const null_transition = { duration: 0 };
@@ -715,7 +741,7 @@ var app = (function () {
     }
 
     function dispatch_dev(type, detail) {
-        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.43.0' }, detail), true));
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.49.0' }, detail), { bubbles: true }));
     }
     function append_dev(target, node) {
         dispatch_dev('SvelteDOMInsert', { target, node });
@@ -973,7 +999,7 @@ var app = (function () {
         };
     }
 
-    /* src/CMYKify.svelte generated by Svelte v3.43.0 */
+    /* src/CMYKify.svelte generated by Svelte v3.49.0 */
     const file$5 = "src/CMYKify.svelte";
 
     // (15:0) {#if $introVisible}
@@ -1059,39 +1085,39 @@ var app = (function () {
     			a1 = element("a");
     			a1.textContent = "LHLI Corporation™®© Limited";
     			t23 = text(". No rights reserved.");
-    			attr_dev(span0, "class", "c svelte-15gf497");
+    			attr_dev(span0, "class", "c svelte-1fq0q4j");
     			add_location(span0, file$5, 22, 3, 594);
-    			attr_dev(span1, "class", "m svelte-15gf497");
+    			attr_dev(span1, "class", "m svelte-1fq0q4j");
     			add_location(span1, file$5, 22, 27, 618);
-    			attr_dev(span2, "class", "y svelte-15gf497");
+    			attr_dev(span2, "class", "y svelte-1fq0q4j");
     			add_location(span2, file$5, 22, 51, 642);
-    			attr_dev(span3, "class", "k svelte-15gf497");
+    			attr_dev(span3, "class", "k svelte-1fq0q4j");
     			add_location(span3, file$5, 22, 75, 666);
-    			attr_dev(h1, "class", "svelte-15gf497");
+    			attr_dev(h1, "class", "svelte-1fq0q4j");
     			add_location(h1, file$5, 21, 2, 586);
     			add_location(p0, file$5, 24, 2, 705);
-    			attr_dev(span4, "class", "c svelte-15gf497");
+    			attr_dev(span4, "class", "c svelte-1fq0q4j");
     			add_location(span4, file$5, 27, 5, 811);
-    			attr_dev(span5, "class", "m svelte-15gf497");
+    			attr_dev(span5, "class", "m svelte-1fq0q4j");
     			add_location(span5, file$5, 27, 29, 835);
-    			attr_dev(span6, "class", "y svelte-15gf497");
+    			attr_dev(span6, "class", "y svelte-1fq0q4j");
     			add_location(span6, file$5, 27, 53, 859);
-    			attr_dev(span7, "class", "k svelte-15gf497");
+    			attr_dev(span7, "class", "k svelte-1fq0q4j");
     			add_location(span7, file$5, 27, 77, 883);
-    			attr_dev(span8, "class", "cmykificator svelte-15gf497");
+    			attr_dev(span8, "class", "cmykificator svelte-1fq0q4j");
     			add_location(span8, file$5, 26, 27, 779);
     			add_location(p1, file$5, 25, 2, 748);
     			attr_dev(a0, "href", "./cmyk.zip");
-    			attr_dev(a0, "class", "svelte-15gf497");
+    			attr_dev(a0, "class", "svelte-1fq0q4j");
     			add_location(a0, file$5, 32, 3, 1114);
     			add_location(code, file$5, 32, 49, 1160);
     			add_location(br, file$5, 32, 80, 1191);
     			attr_dev(a1, "href", "https://lhli.net");
-    			attr_dev(a1, "class", "svelte-15gf497");
+    			attr_dev(a1, "class", "svelte-1fq0q4j");
     			add_location(a1, file$5, 33, 21, 1219);
-    			attr_dev(small, "class", "svelte-15gf497");
+    			attr_dev(small, "class", "svelte-1fq0q4j");
     			add_location(small, file$5, 30, 2, 1049);
-    			attr_dev(div, "class", "cmykify svelte-15gf497");
+    			attr_dev(div, "class", "cmykify svelte-1fq0q4j");
     			add_location(div, file$5, 15, 1, 362);
     		},
     		m: function mount(target, anchor) {
@@ -1302,7 +1328,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Mixin.svelte generated by Svelte v3.43.0 */
+    /* src/Mixin.svelte generated by Svelte v3.49.0 */
     const file$4 = "src/Mixin.svelte";
 
     // (24:0) {#if $isSmallScreen}
@@ -1529,7 +1555,7 @@ var app = (function () {
     	}
     }
 
-    /* src/parts/Slider.svelte generated by Svelte v3.43.0 */
+    /* src/parts/Slider.svelte generated by Svelte v3.49.0 */
 
     const file$3 = "src/parts/Slider.svelte";
 
@@ -1778,7 +1804,7 @@ var app = (function () {
     	}
     }
 
-    /* src/CMYKificator.svelte generated by Svelte v3.43.0 */
+    /* src/CMYKificator.svelte generated by Svelte v3.49.0 */
     const file$2 = "src/CMYKificator.svelte";
 
     // (46:2) {#if active}
@@ -1940,11 +1966,11 @@ var app = (function () {
     			t5 = space();
     			div1 = element("div");
     			create_component(mixin.$$.fragment);
-    			attr_dev(form, "class", "svelte-kgtjmz");
+    			attr_dev(form, "class", "svelte-qke31l");
     			add_location(form, file$2, 47, 4, 1468);
-    			attr_dev(div0, "class", "settings svelte-kgtjmz");
+    			attr_dev(div0, "class", "settings svelte-qke31l");
     			add_location(div0, file$2, 46, 3, 1401);
-    			attr_dev(div1, "class", "cmykOut svelte-kgtjmz");
+    			attr_dev(div1, "class", "cmykOut svelte-qke31l");
     			add_location(div1, file$2, 56, 3, 1996);
     		},
     		m: function mount(target, anchor) {
@@ -2130,20 +2156,20 @@ var app = (function () {
     			br = element("br");
     			t6 = space();
     			if (if_block) if_block.c();
-    			attr_dev(div0, "class", "cmyk svelte-kgtjmz");
+    			attr_dev(div0, "class", "cmyk svelte-qke31l");
     			add_location(div0, file$2, 39, 1, 1078);
-    			attr_dev(span0, "class", "c svelte-kgtjmz");
+    			attr_dev(span0, "class", "c svelte-qke31l");
     			add_location(span0, file$2, 42, 3, 1282);
-    			attr_dev(span1, "class", "m svelte-kgtjmz");
+    			attr_dev(span1, "class", "m svelte-qke31l");
     			add_location(span1, file$2, 42, 27, 1306);
-    			attr_dev(span2, "class", "y svelte-kgtjmz");
+    			attr_dev(span2, "class", "y svelte-qke31l");
     			add_location(span2, file$2, 42, 51, 1330);
-    			attr_dev(div1, "class", "header svelte-kgtjmz");
+    			attr_dev(div1, "class", "header svelte-qke31l");
     			add_location(div1, file$2, 41, 2, 1139);
     			add_location(br, file$2, 44, 2, 1376);
-    			attr_dev(div2, "class", "cmykIt svelte-kgtjmz");
+    			attr_dev(div2, "class", "cmykIt svelte-qke31l");
     			add_location(div2, file$2, 40, 1, 1116);
-    			attr_dev(div3, "class", "cmykificator svelte-kgtjmz");
+    			attr_dev(div3, "class", "cmykificator svelte-qke31l");
     			add_location(div3, file$2, 38, 0, 1050);
     		},
     		l: function claim(nodes) {
@@ -2434,7 +2460,7 @@ var app = (function () {
     	}
     }
 
-    /* src/parts/Info.svelte generated by Svelte v3.43.0 */
+    /* src/parts/Info.svelte generated by Svelte v3.49.0 */
     const file$1 = "src/parts/Info.svelte";
 
     function create_fragment$1(ctx) {
@@ -2461,12 +2487,12 @@ var app = (function () {
     			add_location(path1, file$1, 10, 3, 511);
     			attr_dev(path2, "d", "M15.502 17.045v0h-.436v-6.275c0-.441-.357-.8-.797-.8h-4.84c-.411 0-.772.18-1.017.506 -.198.264-.307.609-.307.972 0 .848.556 1.463 1.323 1.463h.7v4.132h-.7c-.754 0-1.324.638-1.324 1.484 0 .844.557 1.457 1.324 1.457h6.072c.472 0 .878-.233 1.113-.642 .283-.491.28-1.155-.007-1.652 -.236-.41-.639-.645-1.104-.645Zm.246 1.799c-.058.099-.131.141-.247.141h-6.072c-.308 0-.324-.381-.324-.457 0-.005.004-.484.324-.484h1.2c.276 0 .5-.224.5-.5v-5.132c0-.276-.224-.5-.5-.5h-1.2c-.308 0-.323-.385-.323-.463 0-.02.003-.479.323-.479h4.638v6.575c0 .276.224.5.5.5h.935c.001 0 .001 0 .001 0 .076 0 .165.018.239.147 .106.183.108.475.006.652Z");
     			add_location(path2, file$1, 13, 3, 808);
-    			attr_dev(g, "class", "svelte-nmvhn");
+    			attr_dev(g, "class", "svelte-1luodoc");
     			add_location(g, file$1, 6, 2, 182);
     			attr_dev(svg, "viewBox", "0 0 24 24");
-    			attr_dev(svg, "class", "svelte-nmvhn");
+    			attr_dev(svg, "class", "svelte-1luodoc");
     			add_location(svg, file$1, 5, 1, 154);
-    			attr_dev(div, "class", "icon info svelte-nmvhn");
+    			attr_dev(div, "class", "icon info svelte-1luodoc");
     			add_location(div, file$1, 4, 0, 63);
     		},
     		l: function claim(nodes) {
@@ -2537,7 +2563,7 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.43.0 */
+    /* src/App.svelte generated by Svelte v3.49.0 */
     const file = "src/App.svelte";
 
     // (38:0) {#if !$isSmallScreen}
@@ -2659,14 +2685,17 @@ var app = (function () {
     			link2 = element("link");
     			attr_dev(link0, "rel", "preconnect");
     			attr_dev(link0, "href", "https://fonts.googleapis.com");
+    			attr_dev(link0, "class", "svelte-1hnbrxf");
     			add_location(link0, file, 46, 1, 1130);
     			attr_dev(link1, "rel", "preconnect");
     			attr_dev(link1, "href", "https://fonts.gstatic.com");
     			attr_dev(link1, "crossorigin", "");
+    			attr_dev(link1, "class", "svelte-1hnbrxf");
     			add_location(link1, file, 47, 1, 1193);
     			attr_dev(link2, "href", "https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=JetBrains+Mono:wght@300&family=DM+Serif+Display&family=DM+Serif+Text&display=swap");
     			attr_dev(link2, "type", "text/css");
     			attr_dev(link2, "rel", "stylesheet");
+    			attr_dev(link2, "class", "svelte-1hnbrxf");
     			add_location(link2, file, 48, 1, 1265);
     		},
     		l: function claim(nodes) {
